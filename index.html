@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KINETIC — Built For Movement</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                        script: ['Caveat', 'cursive'],
+                    },
+                    colors: {
+                        kinetic: {
+                            black: '#0D0E10',
+                            dark: '#141619',
+                            paper: '#EAE8E3',
+                            paperDark: '#DFDCD5',
+                            textMuted: '#6B6F76'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .ripped-top {
+            clip-path: polygon(0% 2vw, 5% 0vw, 10% 1.5vw, 15% 0.3vw, 20% 2vw, 25% 0.5vw, 30% 1.8vw, 35% 0.2vw, 40% 1.5vw, 45% 0.5vw, 50% 1.8vw, 55% 0.2vw, 60% 1.5vw, 65% 0.5vw, 70% 2vw, 75% 0.3vw, 80% 1.8vw, 85% 0.5vw, 90% 2vw, 95% 0.2vw, 100% 1.5vw, 100% 100%, 0% 100%);
+        }
+        .ripped-bottom {
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 2vw), 95% 100%, 90% calc(100% - 1.5vw), 85% 100%, 80% calc(100% - 1.8vw), 75% 100%, 70% calc(100% - 1.5vw), 65% 100%, 60% calc(100% - 1.8vw), 55% 100%, 50% calc(100% - 1.5vw), 45% 100%, 40% calc(100% - 1.8vw), 35% 100%, 30% calc(100% - 1.5vw), 25% 100%, 20% calc(100% - 1.8vw), 15% 100%, 10% calc(100% - 1.5vw), 5% 100%, 0 calc(100% - 2vw));
+        }
+        .polaroid-shadow {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0D0E10; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
+    </style>
+</head>
+<body class="bg-kinetic-black text-white font-sans antialiased selection:bg-white selection:text-black">
+
+    <!-- Announcement Bar -->
+    <div class="bg-white text-black text-[11px] font-bold py-2 px-4 text-center uppercase tracking-widest font-display z-50 relative">
+        ⚡ Free Shipping Seluruh Indonesia untuk Minimal Pembelian Rp 300.000 — <a href="#shop" class="underline">Belanja Sekarang</a>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 bg-white text-black px-6 py-3.5 rounded-xl shadow-2xl flex items-center gap-3 translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+        <i class="fa-solid fa-circle-check text-black"></i>
+        <span id="toast-msg" class="text-xs font-bold uppercase tracking-wider">Produk ditambahkan!</span>
+    </div>
+
+    <!-- Header Navigation -->
+    <header class="fixed top-[37px] left-0 right-0 z-40 bg-black/60 backdrop-blur-md border-b border-white/10 text-white transition-all">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="#" class="text-2xl font-black tracking-[0.25em] font-display uppercase">KINETIC</a>
+
+            <nav class="hidden md:flex items-center gap-8 text-xs font-semibold tracking-widest uppercase text-gray-300">
+                <a href="#home" class="text-white hover:text-white transition">Home</a>
+                <a href="#shop" class="hover:text-white transition">Shop</a>
+                <a href="#about" class="hover:text-white transition">About</a>
+                <a href="#journal" class="hover:text-white transition">Journal</a>
+                <a href="#reviews" class="hover:text-white transition">Reviews</a>
+                <a href="#faq" class="hover:text-white transition">FAQ</a>
+            </nav>
+
+            <div class="flex items-center gap-5 text-base text-gray-300">
+                <button onclick="toggleSearch()" class="hover:text-white transition" title="Cari"><i class="fa-solid fa-magnifying-glass"></i></button>
+                <a href="#" class="hover:text-white transition" title="Akun"><i class="fa-regular fa-user"></i></a>
+                <button onclick="toggleCart()" class="hover:text-white transition relative" title="Keranjang">
+                    <i class="fa-solid fa-bag-shopping"></i>
+                    <span id="cart-count" class="absolute -top-1.5 -right-2 bg-white text-black font-extrabold text-[9px] w-4 h-4 rounded-full flex items-center justify-center">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Search Modal -->
+    <div id="search-modal" class="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-6 hidden opacity-0 transition-opacity duration-300 backdrop-blur-md">
+        <button onclick="toggleSearch()" class="absolute top-8 right-8 text-white text-2xl hover:rotate-90 transition-transform"><i class="fa-solid fa-xmark"></i></button>
+        <div class="w-full max-w-xl text-center">
+            <p class="text-xs uppercase tracking-[0.3em] text-gray-400 mb-4 font-display">Pencarian Cepat</p>
+            <input type="text" id="search-input" placeholder="Cari Core Cap, Terrain, Summit..." class="w-full bg-transparent border-b-2 border-white/40 text-white text-xl py-3 text-center focus:outline-none focus:border-white placeholder-gray-600 font-medium">
+        </div>
+    </div>
+
+    <!-- 1. HERO SECTION -->
+    <section id="home" class="relative min-h-screen bg-kinetic-black flex flex-col justify-between pt-36 pb-10 px-6 overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <img src="1.jpeg" alt="Kinetic Hero" class="w-full h-full object-cover object-center opacity-45 scale-105">
+            <div class="absolute inset-0 bg-gradient-to-t from-kinetic-black via-transparent to-black/60"></div>
+        </div>
+
+        <div class="hidden lg:block absolute top-40 right-12 z-10 rotate-6 hover:rotate-0 transition duration-500">
+            <div class="bg-white p-3 pb-8 rounded shadow-2xl w-48 text-black polaroid-shadow">
+                <img src="https://images.unsplash.com/photo-1501555088652-021faa106b9b?auto=format&fit=crop&q=80&w=400" alt="Outdoor View" class="w-full h-40 object-cover rounded-sm mb-3">
+                <p class="font-script text-2xl text-center leading-none text-gray-800">Same Hat, Bigger Journey</p>
+            </div>
+        </div>
+
+        <div class="relative z-10 max-w-7xl mx-auto w-full pt-12 md:pt-20">
+            <div class="max-w-2xl">
+                <span class="text-xs font-bold uppercase tracking-[0.3em] text-gray-300 mb-2 block font-display">BUILT FOR</span>
+                <h1 class="text-6xl md:text-8xl font-black tracking-tighter uppercase mb-4 leading-none font-display">MOVEMENT</h1>
+                <p class="text-sm font-bold tracking-[0.3em] uppercase text-gray-400 mb-6 font-display">K I N E T I C</p>
+                <p class="text-gray-300 text-sm md:text-base leading-relaxed mb-8 max-w-md">
+                    Topi premium yang dirancang untuk menemani setiap langkahmu — dari aktivitas harian di perkotaan hingga petualangan alam bebas tanpa batas.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <a href="#shop" class="inline-flex items-center gap-3 bg-white text-black px-7 py-3.5 rounded-full text-xs font-bold uppercase tracking-wider hover:bg-gray-200 transition group shadow-2xl">
+                        EXPLORE COLLECTION
+                        <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
+                    </a>
+                    <a href="#about" class="inline-flex items-center gap-3 border border-white/30 text-white px-7 py-3.5 rounded-full text-xs font-bold uppercase tracking-wider hover:bg-white/10 transition">
+                        OUR STORY
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="hidden md:block absolute right-8 bottom-32 z-10 text-right text-[10px] font-bold tracking-[0.3em] text-gray-400 space-y-1 font-display">
+            <p>EVERYDAY</p>
+            <p>ADVENTURE</p>
+            <p>OUTDOOR</p>
+            <p>STREET</p>
+        </div>
+
+        <div class="relative z-10 max-w-7xl mx-auto w-full flex justify-between items-end text-xs text-gray-400 border-t border-white/10 pt-6 mt-12">
+            <div class="flex items-center gap-4 text-xs font-bold font-display tracking-widest text-white">
+                <span class="text-gray-500">01</span>
+                <span>02</span>
+                <span class="text-gray-500">03</span>
+            </div>
+            <div class="flex items-center gap-2 text-xs text-gray-400">
+                <i class="fa-solid fa-arrow-down-long text-xs animate-bounce"></i>
+                <span class="tracking-widest uppercase text-[10px]">Scroll Down</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. FEATURED COLLECTION SECTION (RIPPED PAPER STYLE) -->
+    <section id="shop" class="relative bg-kinetic-paper text-kinetic-black py-28 px-6 -mt-8 z-20 ripped-top ripped-bottom">
+        <div class="max-w-7xl mx-auto">
+            
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
+                <div>
+                    <span class="text-[11px] font-bold uppercase tracking-[0.25em] text-kinetic-textMuted mb-2 block font-display">FEATURED COLLECTION</span>
+                    <h2 class="text-3xl md:text-5xl font-black tracking-tight font-display">Topi dengan Desain<br>Fungsional & Timeless</h2>
+                    <p class="text-gray-600 text-sm mt-3 max-w-md">Koleksi topi Kinetic hadir dengan material premium, detail fungsional, dan desain yang selalu relevan.</p>
+                </div>
+                <!-- Filter Buttons -->
+                <div class="flex flex-wrap gap-2 text-xs font-bold uppercase tracking-wider">
+                    <button onclick="filterProduct('all')" class="filter-btn px-4 py-2 rounded-full bg-black text-white transition">Semua</button>
+                    <button onclick="filterProduct('bestseller')" class="filter-btn px-4 py-2 rounded-full bg-black/10 text-black hover:bg-black hover:text-white transition">Best Seller</button>
+                    <button onclick="filterProduct('new')" class="filter-btn px-4 py-2 rounded-full bg-black/10 text-black hover:bg-black hover:text-white transition">New Drop</button>
+                </div>
+            </div>
+
+            <!-- Grid Produk -->
+            <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+                
+                <!-- Card 1 -->
+                <div class="product-card bg-kinetic-paperDark/60 p-4 rounded-xl border border-black/5 hover:border-black/20 transition group" data-category="bestseller">
+                    <div class="relative aspect-square mb-4 bg-white/40 rounded-lg p-4 flex items-center justify-center overflow-hidden">
+                        <span class="absolute top-2 left-2 bg-black text-white text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-wider z-10">BEST SELLER</span>
+                        <img src="6.jpeg    " alt="Core Cap" class="w-full h-full object-contain group-hover:scale-105 transition duration-500">
+                    </div>
+                    <h3 class="font-bold text-sm">Core Cap</h3>
+                    <div class="flex gap-1.5 my-2">
+                        <span class="w-3 h-3 rounded-full bg-black border"></span>
+                        <span class="w-3 h-3 rounded-full bg-gray-500 border"></span>
+                    </div>
+                    <div class="flex items-center justify-between mt-3">
+                        <span class="font-bold text-xs">Rp 199.000</span>
+                        <button onclick="addToCart('Core Cap', 199000)" class="w-7 h-7 rounded-full border border-black flex items-center justify-center text-xs hover:bg-black hover:text-white transition"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="product-card bg-kinetic-paperDark/60 p-4 rounded-xl border border-black/5 hover:border-black/20 transition group" data-category="outdoor">
+                    <div class="relative aspect-square mb-4 bg-white/40 rounded-lg p-4 flex items-center justify-center overflow-hidden">
+                        <img src="2.jpeg" alt="Terrain Cap" class="w-full h-full object-contain group-hover:scale-105 transition duration-500">
+                    </div>
+                    <h3 class="font-bold text-sm">Terrain Cap</h3>
+                    <div class="flex gap-1.5 my-2">
+                        <span class="w-3 h-3 rounded-full bg-[#D2B48C] border"></span>
+                        <span class="w-3 h-3 rounded-full bg-[#4B5320] border"></span>
+                    </div>
+                    <div class="flex items-center justify-between mt-3">
+                        <span class="font-bold text-xs">Rp 209.000</span>
+                        <button onclick="addToCart('Terrain Cap', 209000)" class="w-7 h-7 rounded-full border border-black flex items-center justify-center text-xs hover:bg-black hover:text-white transition"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="product-card bg-kinetic-paperDark/60 p-4 rounded-xl border border-black/5 hover:border-black/20 transition group" data-category="outdoor">
+                    <div class="relative aspect-square mb-4 bg-white/40 rounded-lg p-4 flex items-center justify-center overflow-hidden">
+                        <img src="3.jpeg" alt="Summit Cap" class="w-full h-full object-contain group-hover:scale-105 transition duration-500">
+                    </div>
+                    <h3 class="font-bold text-sm">Summit Cap</h3>
+                    <div class="flex gap-1.5 my-2">
+                        <span class="w-3 h-3 rounded-full bg-[#36454F] border"></span>
+                        <span class="w-3 h-3 rounded-full bg-[#2F4F4F] border"></span>
+                    </div>
+                    <div class="flex items-center justify-between mt-3">
+                        <span class="font-bold text-xs">Rp 219.000</span>
+                        <button onclick="addToCart('Summit Cap', 219000)" class="w-7 h-7 rounded-full border border-black flex items-center justify-center text-xs hover:bg-black hover:text-white transition"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="product-card bg-kinetic-paperDark/60 p-4 rounded-xl border border-black/5 hover:border-black/20 transition group" data-category="new">
+                    <div class="relative aspect-square mb-4 bg-white/40 rounded-lg p-4 flex items-center justify-center overflow-hidden">
+                        <span class="absolute top-2 left-2 bg-black text-white text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-wider z-10">NEW</span>
+                        <img src="https://images.unsplash.com/photo-1534215754734-18e55d13e346?auto=format&fit=crop&q=80&w=500" alt="Urban Cap" class="w-full h-full object-contain group-hover:scale-105 transition duration-500">
+                    </div>
+                    <h3 class="font-bold text-sm">Urban Cap</h3>
+                    <div class="flex gap-1.5 my-2">
+                        <span class="w-3 h-3 rounded-full bg-[#414833] border"></span>
+                        <span class="w-3 h-3 rounded-full bg-[#A39274] border"></span>
+                    </div>
+                    <div class="flex items-center justify-between mt-3">
+                        <span class="font-bold text-xs">Rp 199.000</span>
+                        <button onclick="addToCart('Urban Cap', 199000)" class="w-7 h-7 rounded-full border border-black flex items-center justify-center text-xs hover:bg-black hover:text-white transition"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Keunggulan -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 border-t border-black/10">
+                <div class="flex items-center gap-3">
+                    <i class="fa-solid fa-feather text-lg"></i>
+                    <div>
+                        <h4 class="font-bold text-xs">Premium Material</h4>
+                        <p class="text-[11px] text-gray-600">Nyaman dipakai seharian tanpa gerah.</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <i class="fa-solid fa-wind text-lg"></i>
+                    <div>
+                        <h4 class="font-bold text-xs">Breathable Fabric</h4>
+                        <p class="text-[11px] text-gray-600">Sirkulasi udara maksimal di segala cuaca.</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <i class="fa-solid fa-sliders text-lg"></i>
+                    <div>
+                        <h4 class="font-bold text-xs">Adjustable Fit</h4>
+                        <p class="text-[11px] text-gray-600">Pengikat presisi untuk semua ukuran kepala.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 3. OUR STORY SECTION -->
+    <section id="about" class="py-24 px-6 bg-kinetic-black text-white">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            <div class="lg:col-span-5 relative">
+                <div class="rounded-2xl overflow-hidden aspect-[4/5] relative border border-white/10 shadow-2xl">
+                    <img src="4.jpeg" alt="Detail" class="w-full h-full object-cover">
+                    <div class="absolute bottom-6 left-6 font-script text-3xl text-white drop-shadow-md -rotate-6">
+                        More Than Just a Hat
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-8 items-center">
+                <div>
+                    <span class="text-[10px] font-bold uppercase tracking-[0.25em] text-gray-400 mb-2 block font-display">OUR STORY</span>
+                    <h2 class="text-3xl font-black tracking-tight mb-4 font-display">Dari Ide Sederhana<br>Menjadi Kinetic</h2>
+                    <p class="text-xs text-gray-400 leading-relaxed mb-6">
+                        Dari Dua Teman, Menjadi Sebuah Perjalanan.
+KINETIC berawal dari ide sederhana: menciptakan topi yang bukan hanya soal gaya, tetapi juga tentang karakter, perjalanan, dan keberanian untuk bergerak maju.
+Dua perspektif, satu visi. Ini baru permulaan.
+KENALI CERITA KAMI →
+                    </p>
+                    <a href="#shop" class="inline-block border border-white/30 rounded-full px-6 py-2.5 text-xs font-bold uppercase tracking-wider hover:bg-white hover:text-black transition">
+                        Jelajahi Koleksi &rarr;
+                    </a>
+                </div>
+
+                <div class="bg-white p-3 pb-8 rounded shadow-2xl text-black rotate-2 hover:rotate-0 transition duration-500">
+                    <img src="5.jpeg" alt="Model" class="w-full h-56 object-cover rounded-sm mb-3">
+                    <p class="font-script text-2xl text-center leading-none text-gray-800">Different places. Same kinetic.</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 4. LIFESTYLE MASONRY GRID (JOURNAL) -->
+    <section id="journal" class="py-16 px-6 bg-kinetic-dark border-t border-white/10">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            
+            <div class="relative h-80 rounded-xl overflow-hidden group">
+                <img src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=600" alt="Daily Grind" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                <div class="absolute bottom-4 left-4">
+                    <h3 class="font-black text-sm uppercase tracking-wider font-display">FOR YOUR DAILY GRIND</h3>
+                </div>
+            </div>
+
+            <div class="relative h-80 rounded-xl overflow-hidden group">
+                <img src="7.jpeg" alt="Next Journey" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                <div class="absolute bottom-4 left-4">
+                    <h3 class="font-black text-sm uppercase tracking-wider font-display">FOR YOUR NEXT JOURNEY</h3>
+                </div>
+            </div>
+
+            <div class="relative h-80 rounded-xl overflow-hidden group">
+                <img src="9.jpeg" alt="Wild Soul" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                <div class="absolute bottom-4 left-4">
+                    <h3 class="font-black text-sm uppercase tracking-wider font-display">FOR THE WILD SOUL</h3>
+                </div>
+            </div>
+
+            <div class="relative h-80 rounded-xl overflow-hidden group">
+                <img src="8.jpeg" alt="Small Details" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                <div class="absolute inset-0 bg-black/50"></div>
+                <div class="absolute inset-0 p-6 flex flex-col justify-between">
+                    <p class="font-script text-2xl text-white leading-tight">Small details, Big differences.</p>
+                    <a href="#shop" class="self-end w-10 h-10 rounded-full border border-white/40 flex items-center justify-center hover:bg-white hover:text-black transition">
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 5. TESTIMONIALS / REVIEWS SECTION -->
+    <section id="reviews" class="py-24 px-6 bg-kinetic-black border-t border-white/10">
+        <div class="max-w-7xl mx-auto text-center mb-16">
+            <span class="text-[10px] font-bold uppercase tracking-[0.25em] text-gray-400 mb-2 block font-display">TESTIMONIALS</span>
+            <h2 class="text-3xl md:text-4xl font-black tracking-tight font-display">Apa Kata Mereka Tentang Kinetic?</h2>
+        </div>
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-white/5 p-6 rounded-2xl border border-white/10 flex flex-col justify-between">
+                <div>
+                    <div class="flex text-yellow-400 gap-1 text-xs mb-4">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-xs text-gray-300 leading-relaxed mb-6">"Bahan Core Cap-nya beneran adem dipakai panas-panasan naik motor. Bentuk topinya pas banget di kepala, ga bikin pusing."</p>
+                </div>
+                <div class="flex items-center gap-3 border-t border-white/10 pt-4">
+                    <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center font-bold text-xs">R</div>
+                    <div>
+                        <h4 class="font-bold text-xs">Rian Pratama</h4>
+                        <p class="text-[10px] text-gray-500">Jakarta</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white/5 p-6 rounded-2xl border border-white/10 flex flex-col justify-between">
+                <div>
+                    <div class="flex text-yellow-400 gap-1 text-xs mb-4">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-xs text-gray-300 leading-relaxed mb-6">"Terrain Cap jadi andalan banget pas kemarin camping. Kena air gerimis cepet kering dan modelnya keren parah!"</p>
+                </div>
+                <div class="flex items-center gap-3 border-t border-white/10 pt-4">
+                    <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center font-bold text-xs">D</div>
+                    <div>
+                        <h4 class="font-bold text-xs">Dimas Anugrah</h4>
+                        <p class="text-[10px] text-gray-500">Bandung</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white/5 p-6 rounded-2xl border border-white/10 flex flex-col justify-between">
+                <div>
+                    <div class="flex text-yellow-400 gap-1 text-xs mb-4">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-xs text-gray-300 leading-relaxed mb-6">"Pengiriman cepat, packaging rapi pakai box eksklusif. Suka banget sama detail jahitan dan bordirannya yang rapi."</p>
+                </div>
+                <div class="flex items-center gap-3 border-t border-white/10 pt-4">
+                    <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center font-bold text-xs">A</div>
+                    <div>
+                        <h4 class="font-bold text-xs">Alഫിa S.</h4>
+                        <p class="text-[10px] text-gray-500">Surabaya</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. FAQ SECTION -->
+    <section id="faq" class="py-24 px-6 bg-kinetic-dark border-t border-white/10">
+        <div class="max-w-3xl mx-auto">
+            <div class="text-center mb-16">
+                <span class="text-[10px] font-bold uppercase tracking-[0.25em] text-gray-400 mb-2 block font-display">FAQ</span>
+                <h2 class="text-3xl md:text-4xl font-black tracking-tight font-display">Pertanyaan yang Sering Diajukan</h2>
+            </div>
+            <div class="space-y-4">
+                <details class="bg-white/5 p-5 rounded-xl border border-white/10 group cursor-pointer">
+                    <summary class="font-bold text-xs flex justify-between items-center">Bagaimana cara merawat topi Kinetic?<span class="transition group-open:rotate-180"><i class="fa-solid fa-chevron-down"></i></span></summary>
+                    <p class="text-xs text-gray-400 mt-3 leading-relaxed">Disarankan mencuci manual menggunakan sikat lembut dan deterjen ringan. Jangan dimasukkan ke dalam mesin cuci agar struktur lidah topi tetap terjaga.</p>
+                </details>
+                <details class="bg-white/5 p-5 rounded-xl border border-white/10 group cursor-pointer">
+                    <summary class="font-bold text-xs flex justify-between items-center">Berapa lama proses pengiriman pesanan?<span class="transition group-open:rotate-180"><i class="fa-solid fa-chevron-down"></i></span></summary>
+                    <p class="text-xs text-gray-400 mt-3 leading-relaxed">Pesanan dikirimkan dalam 1x24 jam hari kerja. Estimasi pengiriman reguler adalah 2-4 hari kerja tergantung wilayah tujuan.</p>
+                </details>
+                <details class="bg-white/5 p-5 rounded-xl border border-white/10 group cursor-pointer">
+                    <summary class="font-bold text-xs flex justify-between items-center">Apakah ada garansi jika produk rusak?<span class="transition group-open:rotate-180"><i class="fa-solid fa-chevron-down"></i></span></summary>
+                    <p class="text-xs text-gray-400 mt-3 leading-relaxed">Tentu! Kami memberikan garansi penukaran baru jika terdapat cacat produksi dengan menyertakan video unboxing saat paket diterima.</p>
+                </details>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer id="contact" class="bg-kinetic-black text-white pt-16 pb-8 px-6 border-t border-white/10">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-8 mb-12">
+            <div>
+                <a href="#" class="text-2xl font-black tracking-widest uppercase font-display block mb-1">KINETIC</a>
+                <p class="text-xs text-gray-500 uppercase tracking-widest font-display">MOVE WITH PURPOSE</p>
+            </div>
+
+            <div class="w-full md:w-auto">
+                <p class="text-xs text-gray-400 mb-2">Jangan lewatkan koleksi *limited drop* kami.</p>
+                <div class="relative max-w-sm">
+                    <input type="email" placeholder="Masukkan email kamu" class="w-full bg-white/5 border border-white/20 rounded-full px-5 py-2.5 text-xs text-white focus:outline-none focus:border-white pr-10">
+                    <button class="absolute right-3 top-1/2 -translate-y-1/2 w-7 h-7 bg-white text-black rounded-full flex items-center justify-center text-xs"><i class="fa-solid fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="flex gap-4 text-base text-gray-400">
+                <a href="#" class="hover:text-white transition"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#" class="hover:text-white transition"><i class="fa-brands fa-tiktok"></i></a>
+                <a href="#" class="hover:text-white transition"><i class="fa-brands fa-spotify"></i></a>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto border-t border-white/10 pt-6 flex flex-col sm:flex-row justify-between text-[11px] text-gray-500">
+            <div class="flex gap-6 mb-2 sm:mb-0">
+                <a href="#home" class="hover:text-white">Home</a>
+                <a href="#shop" class="hover:text-white">Shop</a>
+                <a href="#about" class="hover:text-white">About</a>
+                <a href="#journal" class="hover:text-white">Journal</a>
+                <a href="#reviews" class="hover:text-white">Reviews</a>
+            </div>
+            <p>&copy; 2026 Kinetic. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Slide-over Cart Drawer -->
+    <div id="cart-drawer" class="fixed inset-0 z-50 pointer-events-none">
+        <div id="cart-bg" onclick="toggleCart()" class="absolute inset-0 bg-black/60 opacity-0 transition-opacity duration-300"></div>
+        <div id="cart-panel" class="absolute right-0 top-0 bottom-0 w-full max-w-md bg-kinetic-dark text-white shadow-2xl translate-x-full transition-transform duration-300 pointer-events-auto flex flex-col border-l border-white/10">
+            <div class="p-6 border-b border-white/10 flex justify-between items-center">
+                <h3 class="font-bold text-sm uppercase tracking-wider font-display">Keranjang Belanja</h3>
+                <button onclick="toggleCart()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div id="cart-items" class="p-6 flex-1 overflow-y-auto space-y-4">
+                <p class="text-center text-gray-500 text-xs py-12">Keranjangmu masih kosong.</p>
+            </div>
+            <div class="p-6 border-t border-white/10 bg-black/40 space-y-4">
+                <div class="flex justify-between font-bold text-sm">
+                    <span>Total Subtotal</span>
+                    <span id="cart-subtotal">Rp 0</span>
+                </div>
+                <button onclick="checkout()" class="w-full bg-white text-black py-3 rounded-full text-xs font-bold uppercase tracking-wider hover:bg-gray-200 transition">
+                    Checkout Sekarang
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Interaktif -->
+    <script>
+        let cart = JSON.parse(localStorage.getItem('kinetic_cart')) || [];
+        updateCartUI();
+
+        function toggleSearch() {
+            const modal = document.getElementById('search-modal');
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+                setTimeout(() => modal.classList.remove('opacity-0'), 10);
+                document.getElementById('search-input').focus();
+            } else {
+                modal.classList.add('opacity-0');
+                setTimeout(() => modal.classList.add('hidden'), 300);
+            }
+        }
+
+        function toggleCart() {
+            const drawer = document.getElementById('cart-drawer');
+            const bg = document.getElementById('cart-bg');
+            const panel = document.getElementById('cart-panel');
+
+            if (panel.classList.contains('translate-x-full')) {
+                drawer.classList.remove('pointer-events-none');
+                bg.classList.remove('opacity-0');
+                panel.classList.remove('translate-x-full');
+            } else {
+                bg.classList.add('opacity-0');
+                panel.classList.add('translate-x-full');
+                setTimeout(() => drawer.classList.add('pointer-events-none'), 300);
+            }
+        }
+
+        function addToCart(name, price) {
+            const existing = cart.find(item => item.name === name);
+            if (existing) {
+                existing.qty++;
+            } else {
+                cart.push({ name, price, qty: 1 });
+            }
+            saveCart();
+            updateCartUI();
+            showToast(`"${name}" ditambahkan ke keranjang!`);
+        }
+
+        function changeQty(name, delta) {
+            const item = cart.find(i => i.name === name);
+            if (item) {
+                item.qty += delta;
+                if (item.qty <= 0) {
+                    cart = cart.filter(i => i.name !== name);
+                }
+            }
+            saveCart();
+            updateCartUI();
+        }
+
+        function saveCart() {
+            localStorage.setItem('kinetic_cart', JSON.stringify(cart));
+        }
+
+        function updateCartUI() {
+            const itemsContainer = document.getElementById('cart-items');
+            const countEl = document.getElementById('cart-count');
+            const subtotalEl = document.getElementById('cart-subtotal');
+
+            const totalCount = cart.reduce((acc, item) => acc + item.qty, 0);
+            countEl.innerText = totalCount;
+
+            if (cart.length === 0) {
+                itemsContainer.innerHTML = '<p class="text-center text-gray-500 text-xs py-12">Keranjangmu masih kosong.</p>';
+                subtotalEl.innerText = 'Rp 0';
+                return;
+            }
+
+            let html = '';
+            let total = 0;
+            cart.forEach(item => {
+                total += item.price * item.qty;
+                html += `
+                    <div class="flex items-center justify-between gap-4 border-b border-white/10 pb-4">
+                        <div>
+                            <h4 class="font-bold text-xs">${item.name}</h4>
+                            <p class="text-[10px] text-gray-400 mt-0.5">Rp ${item.price.toLocaleString('id-ID')}</p>
+                            <div class="flex items-center gap-2 mt-2">
+                                <button onclick="changeQty('${item.name}', -1)" class="w-5 h-5 bg-white/10 rounded flex items-center justify-center text-[10px] hover:bg-white/20">-</button>
+                                <span class="text-xs font-bold">${item.qty}</span>
+                                <button onclick="changeQty('${item.name}', 1)" class="w-5 h-5 bg-white/10 rounded flex items-center justify-center text-[10px] hover:bg-white/20">+</button>
+                            </div>
+                        </div>
+                        <span class="font-bold text-xs">Rp ${(item.price * item.qty).toLocaleString('id-ID')}</span>
+                    </div>
+                `;
+            });
+
+            itemsContainer.innerHTML = html;
+            subtotalEl.innerText = `Rp ${total.toLocaleString('id-ID')}`;
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').innerText = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                alert('Keranjang belanjaanmu masih kosong!');
+                return;
+            }
+            alert('Terima kasih! Pesanan KINETIC kamu sedang diproses. Silakan lanjutkan pembayaran.');
+            cart = [];
+            saveCart();
+            updateCartUI();
+            toggleCart();
+        }
+
+        function filterProduct(category) {
+            const cards = document.querySelectorAll('.product-card');
+            const buttons = document.querySelectorAll('.filter-btn');
+
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-black', 'text-white');
+                btn.classList.add('bg-black/10', 'text-black');
+            });
+            event.target.classList.remove('bg-black/10', 'text-black');
+            event.target.classList.add('bg-black', 'text-white');
+
+            cards.forEach(card => {
+                if (category === 'all' || card.dataset.category === category) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
